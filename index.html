@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Webcam Access</title>
+  </head>
+  <body>
+    <h1>I see you</h1>
+    <video id="webcam" autoplay></video>
+    <button id="stopButton">Stop Webcam</button>
+
+    <script>
+      const stopButton = document.getElementById("stopButton");
+      const webcam = document.getElementById("webcam");
+
+      let stream;
+
+      // Function to stop the webcam
+      function stopWebcam() {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          webcam.srcObject = null;
+        }
+        stopButton.style.display = "none";
+      }
+
+      // Automatically start the webcam when the page loads
+      async function init() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          webcam.srcObject = stream;
+          stopButton.style.display = "inline";
+        } catch (error) {
+          console.error("Error accessing the webcam:", error);
+        }
+      }
+
+      // Call the init function when the page loads
+      window.addEventListener("load", init);
+
+      stopButton.addEventListener("click", stopWebcam);
+    </script>
+  </body>
+</html>
